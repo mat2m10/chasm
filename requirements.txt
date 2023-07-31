@@ -1,0 +1,12 @@
+ipykernel # Needed for notebooks
+ipython # needed for ipython
+pandas # data structures and operations for manipulating numerical tables
+numpy # adding support for large, multi-dimensional arrays and matrices.
+termcolor # ANSI color formatting for output in terminal
+tensorflow # open source software library for high performance numerical computation
+scikit-learn # a free software machine learning library for the Python programming language.
+matplotlib # plotting library.
+seaborn # Python data visualization library based on matplotlib.
+k-means-constrained # Variant to K-means algorithm that enables to have clusters of minimum sample-size
+statsmodels # Tool for statistical calculations
+jupyter # Enable to open jupyter notebook
