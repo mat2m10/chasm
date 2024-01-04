@@ -9,17 +9,7 @@ class glob():
     PATH_GENO = f"{PATH_data}genotype"
     PATH_usefull = f"{PATH_data}usefull_values"
     PATH_PHENO = f"{PATH_data}phenotype"
-    PATH_SUMSTAT = f"{PATH_data}sumstat"
-    PATH_SUMSTAT_no_corr = f"{PATH_data}sumstat_no_corr"
-    PATH_GENO_segmented = f"{PATH_GENO}/segmented/"
-    PATH_GENO_mini_dim = f"{PATH_GENO}/mini_dim/"
-    PATH_GENO_maf = f"{PATH_GENO}/maf/"
-
-
-    PATH_PHENO = f"{PATH_data}phenotype/"
-    PATH_PHENO_ancestry = f"{PATH_PHENO}/ancestry/all.panel"
-    PATH_PLOTS = f"{PATH_data}plots/"
-    PATH_PARAMS = './hyper_params_to_test_AF.txt'
+    
     SEABORN_COLORS = [
         'black',
         'k',
