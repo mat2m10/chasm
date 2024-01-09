@@ -5,7 +5,7 @@ class glob():
     CHROM = 22
     #PATH_data = f"../UKB_toydata/"
     #Mount external drive: sudo mount -t drvfs D: /mnt/d
-    PATH_data = f"/mnt/d/UKB_toydata/"
+    PATH_data = f"/mnt/d/chasm_data/"
     PATH_GENO = f"{PATH_data}genotype"
     PATH_usefull = f"{PATH_data}usefull_values"
     PATH_PHENO = f"{PATH_data}phenotype"
