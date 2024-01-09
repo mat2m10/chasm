@@ -10,3 +10,4 @@ seaborn # Python data visualization library based on matplotlib.
 k-means-constrained # Variant to K-means algorithm that enables to have clusters of minimum sample-size
 statsmodels # Tool for statistical calculations
 jupyter # Enable to open jupyter notebook
+hdbscan
