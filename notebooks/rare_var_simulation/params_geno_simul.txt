@@ -1,0 +1,20 @@
+# Define parameters
+G <- 1
+L <- 2500
+c <- 250
+k <- 5
+M <- 0.7
+
+nr_humans <- 1000
+nr_snps <- 1000
+bottleneck_nr <- 64
+
+# Allele frequency Thresholds
+very_rare_threshold_L <- 0
+very_rare_threshold_H <- 0.05
+
+rare_threshold_L <- 0.05
+rare_threshold_H <- 0.3
+
+common_threshold_L <- 0.3
+common_threshold_H <- 1
