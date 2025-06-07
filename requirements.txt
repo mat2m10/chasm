@@ -1,13 +1,16 @@
-ipykernel # Needed for notebooks
-ipython # needed for ipython
-pandas # data structures and operations for manipulating numerical tables
-numpy # adding support for large, multi-dimensional arrays and matrices.
-termcolor # ANSI color formatting for output in terminal
-tensorflow # open source software library for high performance numerical computation
-scikit-learn # a free software machine learning library for the Python programming language.
-matplotlib # plotting library.
-seaborn # Python data visualization library based on matplotlib.
-k-means-constrained # Variant to K-means algorithm that enables to have clusters of minimum sample-size
-statsmodels # Tool for statistical calculations
-jupyter # Enable to open jupyter notebook
-hdbscan
+ipykernel  # Needed for notebooks
+ipython  # Needed for IPython
+pandas  # Data structures and operations for manipulating numerical tables
+numpy<2  # Support for large, multi-dimensional arrays and matrices; version restricted to <2 for compatibility
+termcolor  # ANSI color formatting for output in terminal
+tensorflow  # Open source software library for high-performance numerical computation
+scikit-learn  # Machine learning library for Python
+matplotlib  # Plotting library
+seaborn  # Data visualization library based on matplotlib
+k-means-constrained  # Variant of K-means that enforces minimum cluster size
+statsmodels  # Statistical modeling and tests
+jupyter  # Enables opening Jupyter notebooks
+hdbscan  # Hierarchical Density-Based Spatial Clustering of Applications with Noise
+python-dotenv  # Loads environment variables from a .env file
+umap-learn  # Uniform Manifold Approximation and Projection for dimension reduction
+scipy  # Scientific computing library for Python
