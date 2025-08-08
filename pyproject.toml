@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "chasm"
+version = "0.1.0"
+description = "Simulation and analysis of genotype-phenotype models with dimensionality reduction and clustering"
+authors = ["Your Name <your@email.com>"]
+packages = [{ include = "chasm" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+# Notebook support
+ipykernel = "*"
+ipython = "*"
+jupyter = "*"
+
+# Core data stack
+pandas = "*"
+numpy = "<2"
+scipy = "*"
+matplotlib = "*"
+seaborn = "*"
+
+# ML & statistics
+tensorflow = "*"
+scikit-learn = "*"
+statsmodels = "*"
+umap-learn = "*"
+hdbscan = "*"
+k-means-constrained = "*"
+
+# Utilities
+termcolor = "*"
+python-dotenv = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
