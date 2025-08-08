@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 notebooks/nathandata
-notebooks/linear_simulation_notebooks/simulation_data
+notebooks/coalescence_simulation_notebooks/simulation_data
 
 # C extensions
 *.so
