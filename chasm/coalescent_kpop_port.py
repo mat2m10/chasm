@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import math
 import numpy as np
+import pandas as pd
 from dataclasses import dataclass
 from typing import Optional, Dict, Tuple
 
@@ -415,48 +416,3 @@ def simulate_coalescent_no_recomb(sample: int, theta: float, seed: Optional[int]
         genotypes=G,
         positions=positions,
     )
-
-def make_inbred_genotypes(binary_df: pd.DataFrame, F: float, by_pop: bool = True) -> pd.DataFrame:
-    """
-    Convert the 0/1 'presence' matrix (V1..Vn) to 0/1/2 diploid genotypes under inbreeding F.
-    If by_pop=True, compute q within each population, matching your R pipeline behavior.
-    """
-    Vcols = [c for c in binary_df.columns if c.startswith("V")]
-    X = binary_df[Vcols].to_numpy(dtype=float)  # shape: (N, S)
-    pops = binary_df["populations"].to_numpy()  # 1..k*k
-    N, S = X.shape
-    rng = np.random.default_rng(123)
-
-    G_dip = np.zeros_like(X, dtype=np.int8)
-
-    if by_pop:
-        for pop_id in np.unique(pops):
-            mask = pops == pop_id
-            q = X[mask].mean(axis=0)            # minor allele freq per SNP within this pop
-            p = 1.0 - q
-            # HW+F genotype probs (dosage of minor allele 0/1/2)
-            P0 = q**2 + F * p * q               # (aa)
-            P1 = 2 * p * q * (1 - F)            # (aA)
-            # P2 = p**2 + F * p * q             # (AA) -> implicit as 1 - (P0+P1)
-
-            u = rng.random((mask.sum(), S))
-            G_dip[mask] = (u > P0).astype(np.int8) + (u > (P0 + P1)).astype(np.int8)
-    else:
-        q = X.mean(axis=0); p = 1.0 - q
-        P0 = q**2 + F * p * q
-        P1 = 2 * p * q * (1 - F)
-        u = rng.random((N, S))
-        G_dip = (u > P0).astype(np.int8) + (u > (P0 + P1)).astype(np.int8)
-
-    out = pd.DataFrame(G_dip, columns=Vcols, index=binary_df.index)
-    out["populations"] = binary_df["populations"].values
-    return out
-
-
-if __name__ == "__main__":
-    # Tiny smoke test (not a benchmark):
-    tree = simulate_tree_kpop_lattice(k=3, n_per_pop=5, M=1.0, seed=42)
-    G = simulate_genotype_matrix_from_tree(tree, n_snps=10, seed=42)
-    import pandas as pd
-    df = simulate_kpop_binary_genotypes(k=3, c=5, L=10, M=1.0, seed=123)
-    print(df.head())
