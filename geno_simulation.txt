@@ -1,13 +1,10 @@
 # Define parameters
-G <- 200
-L <- 200
+G <- 20
+L <- 20
 c <- 20
 k <- 10
 M <- 0.1
 HWE <- 1
-nr_humans <- 2000
-nr_snps <- 2000
-bottleneck_nr <- 64
 
 # Allele frequency Thresholds
 very_rare_threshold_L <- 0
