@@ -17,3 +17,5 @@ common_threshold_L <- 0.2
 common_threshold_H <- 0.5
 
 F <- 0.0
+F_inbred <- 1.0
+F_outbred <- 0.0
