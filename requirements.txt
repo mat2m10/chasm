@@ -14,3 +14,4 @@ hdbscan  # Hierarchical Density-Based Spatial Clustering of Applications with No
 python-dotenv  # Loads environment variables from a .env file
 umap-learn  # Uniform Manifold Approximation and Projection for dimension reduction
 scipy  # Scientific computing library for Python
+bed-reader
