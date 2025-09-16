@@ -163,4 +163,4 @@ cython_debug/
 .venv/
 rstudio_geno_simulation/simulated_genotypes*
 data/
- notebooks/ms_prime_tryout/simulation_realistic/
+ notebooks/ms_prime_tryout/simulation_realistic/*
