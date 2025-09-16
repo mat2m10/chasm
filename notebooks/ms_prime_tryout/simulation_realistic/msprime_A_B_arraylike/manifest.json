@@ -1,0 +1,18 @@
+{
+  "n_variants_in": 355975,
+  "n_individuals": 1000,
+  "n_discovery": 500,
+  "n_after_maf": 89349,
+  "n_after_ld": 7863,
+  "n_final": 7863,
+  "config": {
+    "discovery_pop": "A",
+    "maf_min": 0.05,
+    "maf_max": 0.5,
+    "n_snps_target": 600000,
+    "ld_r2": 0.2,
+    "ld_window_bp": 50000,
+    "ld_step_bp": 5000,
+    "random_seed": 1
+  }
+}
