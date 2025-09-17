@@ -1,8 +1,8 @@
-
+# %%writefile ascertainment_diploid_multi.py
 import json
 from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import Optional, Sequence, Tuple
+from typing import Optional, Sequence, Tuple, Dict, Literal
 
 import numpy as np
 import pandas as pd
@@ -10,7 +10,18 @@ import pandas as pd
 
 @dataclass
 class AscertainmentConfig:
+    # Backward-compatible single-pop option (used if discovery_pops is None)
     discovery_pop: str = "A"
+    # Allow selecting multiple populations
+    discovery_pops: Optional[Sequence[str]] = None
+    # How to evaluate the MAF threshold across multiple pops
+    #  - "pooled": pool chosen pops (optionally weighted) and test pooled MAF (default)
+    #  - "any": keep SNP if it passes MAF in >=1 chosen pop
+    #  - "all": keep SNP if it passes MAF in every chosen pop
+    maf_mode: Literal["pooled", "any", "all"] = "pooled"
+    # Optional weights for pooling by population label (e.g., {"EUR":2, "AFR":1})
+    discovery_weights: Optional[Dict[str, float]] = None
+
     maf_min: float = 0.05
     maf_max: float = 0.50
     n_snps_target: int = 600_000
@@ -20,12 +31,19 @@ class AscertainmentConfig:
     random_seed: int = 1
 
 
-def _calc_maf_from_genotypes(g: np.ndarray) -> float:
-    """Diploid genotypes 0/1/2 → MAF in [0, 0.5]."""
+def _calc_maf_from_genotypes(g: np.ndarray, weights: Optional[np.ndarray] = None) -> float:
+    """Diploid genotypes 0/1/2 → MAF in [0, 0.5]. Optional per-individual weights."""
     if g.size == 0:
         return np.nan
-    p = g.mean() / 2.0
-    p = np.clip(p, 0, 1)
+    if weights is None:
+        p = g.mean() / 2.0
+    else:
+        w = np.asarray(weights, dtype=float)
+        w = np.where(np.isfinite(w) & (w > 0), w, 0.0)
+        if w.sum() == 0:
+            return np.nan
+        p = float((g @ w) / (2.0 * w.sum()))
+    p = float(np.clip(p, 0, 1))
     return float(min(p, 1 - p))
 
 
@@ -80,6 +98,27 @@ def _windowed_ld_prune(G: np.ndarray, positions: np.ndarray, r2_thresh: float, w
     return np.array(keep, dtype=int)
 
 
+def _get_discovery_mask(samples_indiv: pd.DataFrame, discovery_sample_col: str, config: AscertainmentConfig) -> np.ndarray:
+    if config.discovery_pops is None:
+        mask = (samples_indiv[discovery_sample_col].values == config.discovery_pop)
+    else:
+        mask = samples_indiv[discovery_sample_col].isin(config.discovery_pops).values
+    return mask
+
+
+def _get_weights_for_mask(samples_indiv: pd.DataFrame, discovery_sample_col: str, mask: np.ndarray, config: AscertainmentConfig) -> Optional[np.ndarray]:
+    """Return per-individual weights (length = n_individuals_in_mask) or None for unweighted."""
+    if config.maf_mode != "pooled":
+        return None  # weights only apply to pooled mode
+    if not config.discovery_weights:
+        return None
+    labels = samples_indiv.loc[mask, discovery_sample_col].values
+    w = np.array([config.discovery_weights.get(lbl, 0.0) for lbl in labels], dtype=float)
+    if np.all(w == 0):
+        return None
+    return w
+
+
 def ascertain_chip_diploid(
     genotypes_hap_df: pd.DataFrame,
     sites_df: pd.DataFrame,
@@ -96,7 +135,7 @@ def ascertain_chip_diploid(
       - genotypes_hap_df: variants x haplotypes (0/1)
       - sites_df: must include a 'pos' column (int bp)
       - samples_df: must include 'sample_index' (haplotype index) and discovery_sample_col (e.g., 'population')
-      - pairing: optional explicit list of (hap1_col, hap2_col); otherwise pairs consecutive haplotypes
+      - pairing: optional explicit list of (hap1, hap2); otherwise pairs consecutive haplotypes
       - config: AscertainmentConfig with thresholds & seeds
 
     Outputs (also saved to outdir):
@@ -141,15 +180,42 @@ def ascertain_chip_diploid(
     # 3) Discovery panel mask
     if discovery_sample_col not in samples_indiv.columns:
         raise ValueError(f"'{discovery_sample_col}' not found in individuals table; cannot define discovery panel.")
-    disc_mask = (samples_indiv[discovery_sample_col].values == config.discovery_pop)
+    disc_mask = _get_discovery_mask(samples_indiv, discovery_sample_col, config)
     if disc_mask.sum() == 0:
-        raise ValueError(f"No individuals found for discovery_pop '{config.discovery_pop}'.")
+        target = config.discovery_pops if config.discovery_pops is not None else config.discovery_pop
+        raise ValueError(f"No individuals found for discovery populations {target!r}.")
 
-    # 4) Compute MAF in discovery panel
-    G_disc = G_dip[:, disc_mask]
-    maf_vals = np.apply_along_axis(_calc_maf_from_genotypes, 1, G_disc)
+    # 4) Compute MAF based on mode
+    G_disc = G_dip[:, disc_mask]  # (V x I_disc)
 
-    maf_keep = (maf_vals >= config.maf_min) & (maf_vals <= config.maf_max)
+    if config.maf_mode == "pooled":
+        weights = _get_weights_for_mask(samples_indiv, discovery_sample_col, disc_mask, config)
+        maf_vals = np.apply_along_axis(_calc_maf_from_genotypes, 1, G_disc, weights)
+        maf_keep = (maf_vals >= config.maf_min) & (maf_vals <= config.maf_max)
+
+    else:
+        # compute per-pop MAFs among the chosen discovery pops
+        if config.discovery_pops is None:
+            chosen = [config.discovery_pop]
+        else:
+            chosen = list(config.discovery_pops)
+
+        maf_by_pop = []
+        for pop in chosen:
+            pop_mask = (samples_indiv[discovery_sample_col].values == pop) & disc_mask
+            G_pop = G_dip[:, pop_mask]
+            maf_pop = np.apply_along_axis(_calc_maf_from_genotypes, 1, G_pop)
+            maf_by_pop.append(maf_pop)
+
+        maf_by_pop = np.vstack(maf_by_pop)  # (P x V)
+        within = (maf_by_pop >= config.maf_min) & (maf_by_pop <= config.maf_max)  # (P x V)
+        if config.maf_mode == "any":
+            maf_keep = within.any(axis=0)
+        elif config.maf_mode == "all":
+            maf_keep = within.all(axis=0)
+        else:
+            raise ValueError(f"Unknown maf_mode: {config.maf_mode}")
+
     G_maf = G_dip[maf_keep]
     sites_maf = sites_df.loc[maf_keep].reset_index(drop=True)
 
@@ -164,11 +230,11 @@ def ascertain_chip_diploid(
 
     # 6) Downsample to target SNP count
     if G_pruned.shape[0] > config.n_snps_target:
-        sel = rng.choice(G_pruned.shape[0], size=config.n_snps_target, replace=False)
-        sel.sort()
-        G_chip = G_pruned[sel]
-        sites_chip = sites_pruned.iloc[sel].reset_index(drop=True)
-        idx_chip = np.flatnonzero(maf_keep)[keep_idx_local][sel]
+        rng_idx = rng.choice(G_pruned.shape[0], size=config.n_snps_target, replace=False)
+        rng_idx.sort()
+        G_chip = G_pruned[rng_idx]
+        sites_chip = sites_pruned.iloc[rng_idx].reset_index(drop=True)
+        idx_chip = np.flatnonzero(maf_keep)[keep_idx_local][rng_idx]
     else:
         G_chip = G_pruned
         sites_chip = sites_pruned
@@ -185,10 +251,12 @@ def ascertain_chip_diploid(
         "n_variants_in": int(n_vars),
         "n_individuals": int(n_ind),
         "n_discovery": int(disc_mask.sum()),
+        "maf_mode": str(config.maf_mode),
+        "discovery_pops": list(config.discovery_pops) if config.discovery_pops is not None else [config.discovery_pop],
         "n_after_maf": int(G_maf.shape[0]),
         "n_after_ld": int(G_pruned.shape[0]),
         "n_final": int(G_chip.shape[0]),
-        "config": AscertainmentConfig(**vars(config)).__dict__,
+        "config": asdict(config),
     }
     with open(outdir / "manifest.json", "w") as f:
         json.dump(manifest, f, indent=2)
