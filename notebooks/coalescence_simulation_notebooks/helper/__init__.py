@@ -3,7 +3,6 @@ from .pheno import make_pheno
 from .geno import (
     _prep_geno_and_pcs,
     find_snps,
-    polygenic_noise,
     standardize_and_return_params,
     snp_correlation_analysis,
 )
@@ -24,7 +23,6 @@ __all__ = [
     "find_snps",
     "visualize_grid_and_pcs",
     "show_top_snps_ordered",
-    "polygenic_noise",
     "plot_effects",
     "plot_components_vs_snp",
     "standardize_and_return_params",

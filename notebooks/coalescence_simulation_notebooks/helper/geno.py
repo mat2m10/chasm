@@ -186,78 +186,7 @@ def find_snps(geno: pd.DataFrame, pop, chosen_bias, PCs: int = 5):
     return pd.DataFrame(rows), pcs, p, HWE_dev
 
 
-def polygenic_noise(
-    geno,
-    chosen_snp,
-    p_causal=0.01,
-    n_causal=None,
-    total_beta=0.2,
-    seed=1,
-    downweight_by_maf_sd=True,
-    regen=False,
-    cache_path="g_noise.npz",
-):
-    if (not regen) and os.path.exists(cache_path):
-        d = np.load(cache_path, allow_pickle=True)
-        return d["g_noise"], d["beta"], d["is_causal"].astype(bool)
 
-    cols = _get_snp_cols(geno)
-    assert chosen_snp in cols, f"{chosen_snp} not in geno SNP columns"
-
-    geno = geno[cols]
-    G = geno.to_numpy(dtype=np.float32)
-    N, M = G.shape
-
-    j = cols.index(chosen_snp)
-    rng = np.random.default_rng(seed)
-
-    eligible = np.arange(M, dtype=int)
-    eligible = eligible[eligible != j]
-
-    if n_causal is not None:
-        n_causal = int(n_causal)
-        n_causal = max(0, min(n_causal, eligible.size))
-        causal_idx = rng.choice(eligible, size=n_causal, replace=False)
-    else:
-        p_causal = float(p_causal)
-        p_causal = max(0.0, min(p_causal, 1.0))
-        n_causal_eff = int(np.round(p_causal * eligible.size))
-        causal_idx = rng.choice(eligible, size=n_causal_eff, replace=False)
-
-    is_causal = np.zeros(M, dtype=bool)
-    is_causal[causal_idx] = True
-
-    beta = np.zeros(M, dtype=np.float32)
-    beta[is_causal] = rng.normal(0.0, 1.0, size=is_causal.sum()).astype(np.float32)
-
-    if downweight_by_maf_sd:
-        maf = np.array([float(c.split("_MAF_")[-1]) for c in cols], dtype=np.float32)
-        sd = np.sqrt(2.0 * maf * (1.0 - maf))
-        sd[sd == 0] = 1.0
-        beta = beta / sd
-
-    beta[j] = 0.0
-
-    norm = float(np.linalg.norm(beta))
-    if norm > 0:
-        beta *= (total_beta / norm)
-
-    g_noise = G @ beta
-    g_noise = (g_noise - g_noise.mean()) / (g_noise.std() + 1e-8)
-
-    np.savez_compressed(
-        cache_path,
-        g_noise=g_noise.astype(np.float32),
-        beta=beta.astype(np.float32),
-        is_causal=is_causal.astype(np.uint8),
-        chosen_snp=np.array(chosen_snp),
-        seed=np.array(seed),
-        p_causal=np.array(p_causal),
-        n_causal=np.array(-1 if n_causal is None else int(n_causal)),
-        total_beta=np.array(total_beta),
-    )
-
-    return g_noise, beta, is_causal
 
 
 def standardize_and_return_params(geno):
