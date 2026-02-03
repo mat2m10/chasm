@@ -12,43 +12,6 @@ def center_geno_by_ps(geno: pd.DataFrame, ps: pd.Series | np.ndarray) -> pd.Data
     offset = (ps - (1 - ps)) + 0.5  # == 2*ps - 0.5
     return geno.astype(float) - offset
 
-def snp_pca_with_gwas_beta(
-    geno: pd.DataFrame,
-    gwas: pd.DataFrame,
-    n_components: int = 2,
-    scaler: StandardScaler | None = None,
-):
-    """
-    PCA on SNPs (geno.T): rows are SNPs, columns are samples.
-
-    Returns:
-      pca_gwas: DataFrame with PC1..PCk and beta, indexed by SNP name.
-      pca_model: fitted PCA
-    """
-    if scaler is None:
-        scaler = StandardScaler(with_mean=True, with_std=True)
-
-    # SNP x sample
-    X = geno.T.to_numpy(dtype=float)
-
-    # standardize across samples
-    X_scaled = scaler.fit_transform(X)
-
-    pca = PCA(n_components=n_components, random_state=0)
-    pcs = pca.fit_transform(X_scaled)
-
-    pca_df = pd.DataFrame(
-        pcs,
-        columns=[f"PC{i+1}" for i in range(n_components)],
-        index=geno.columns,
-    )
-
-    # merge GWAS beta
-    beta = gwas.set_index("snp")[["beta"]]
-    pca_gwas = pca_df.join(beta, how="inner")
-
-    return pca_gwas, pca
-
 
 def pick_correlated_snps(corr_df_sorted: pd.DataFrame, k: int = 2, exclude_self: bool = True):
     """
@@ -189,39 +152,32 @@ def gwas_linregress(geno: pd.DataFrame, y: pd.Series | np.ndarray):
     return pd.DataFrame({"snp": cols, "beta": betas, "intercept": intercepts, "neglog10p": neglogps})
 
 
-def snp_pca_with_gwas_beta(
-    geno: pd.DataFrame,
-    gwas: pd.DataFrame,
-    n_components: int = 2,
-    scaler: StandardScaler | None = None,
-):
+def get_n_pcs(df: pd.DataFrame, n: int, scale: bool = True) -> pd.DataFrame:
     """
-    PCA on SNPs (geno.T): rows are SNPs, columns are samples.
+    Compute the first n principal components of a pandas DataFrame.
 
-    Returns:
-      pca_gwas: DataFrame with PC1..PCk and beta, indexed by SNP name.
-      pca_model: fitted PCA
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Input data (rows = samples, columns = features)
+    n : int
+        Number of principal components to return
+    scale : bool, default=True
+        Whether to standardize features before PCA
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame containing the first n principal components
     """
-    if scaler is None:
-        scaler = StandardScaler(with_mean=True, with_std=True)
+    X = df.values
 
-    # SNP x sample
-    X = geno.T.to_numpy(dtype=float)
+    if scale:
+        X = StandardScaler().fit_transform(X)
 
-    # standardize across samples
-    X_scaled = scaler.fit_transform(X)
+    pca = PCA(n_components=n)
+    pcs = pca.fit_transform(X)
 
-    pca = PCA(n_components=n_components, random_state=0)
-    pcs = pca.fit_transform(X_scaled)
+    pc_columns = [f"PC{i+1}" for i in range(n)]
+    return pd.DataFrame(pcs, index=df.index, columns=pc_columns)
 
-    pca_df = pd.DataFrame(
-        pcs,
-        columns=[f"PC{i+1}" for i in range(n_components)],
-        index=geno.columns,
-    )
-
-    # merge GWAS beta
-    beta = gwas.set_index("snp")[["beta"]]
-    pca_gwas = pca_df.join(beta, how="inner")
-
-    return pca_gwas, pca
