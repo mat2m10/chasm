@@ -151,8 +151,7 @@ def show_top_snps_ordered(humans, geno, values, k=None):
     plt.show()
 
 
-def plot_effects(pheno, effects):
-    cols = ["snp", "pop", "poly", "total"]
+def plot_effects(pheno, effects, cols):
     k = int(np.sqrt(pheno["populations"].nunique()))
 
     pheno = pheno.copy()
