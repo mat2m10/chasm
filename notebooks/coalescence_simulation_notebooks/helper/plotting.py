@@ -151,11 +151,9 @@ def show_top_snps_ordered(humans, geno, values, k=None):
     plt.show()
 
 
-def plot_effects(pheno, effects, cols):
+def plot_effects(pheno, cols):
     k = int(np.sqrt(pheno["populations"].nunique()))
-
-    pheno = pheno.copy()
-    pheno[cols] = effects[cols].to_numpy()
+    pheno[cols] = pheno[cols].to_numpy()
     grid = pheno.groupby(["x", "y"], as_index=False)[cols].mean()
 
     vmins = {c: grid[c].min() for c in cols}
