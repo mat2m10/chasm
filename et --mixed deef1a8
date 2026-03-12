@@ -1,0 +1,112 @@
+* [33maba85d1[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m updating script
+* [33mea1f472[m updating script
+* [33mdeef1a8[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m added marginal effect simulation
+* [33m7e03dee[m yet another
+* [33m0ea0276[m it works
+* [33m5a8b817[m trying stuff again
+* [33m269671c[m analyzing
+* [33m8d287e4[m diff
+* [33m521257b[m starting from scratch
+* [33mc3dcc6f[m redownloading
+* [33m12d5b6d[m finding what's wrong
+* [33m1fabb6e[m creating new scripts
+* [33m1628d4b[m still at proof of concept
+* [33m89aea13[m why not
+* [33m6ee706d[m added polygenic snps
+* [33ma73d433[m polygenic noise
+* [33m8819b58[m adding
+* [33mfffab02[m compiling
+* [33md4c4672[m proof of concept
+* [33mcf83c56[m proof of concept
+* [33m3207740[m adding snps
+* [33m0fd12ac[m continuing proof of concept
+* [33md11baaf[m creating proof of concept
+* [33mb81a50c[m testing msprime
+* [33m6bd53c7[m update
+* [33m11ae404[m removing simul realistic
+* [33m9ca3bea[m trying ms_prime
+* [33m262185d[m creating pipeline
+* [33m740fca2[m running
+* [33m48037c5[m 1000G analysis
+* [33m38d5332[m analysing 1000genomes
+* [33m4aa1dc1[m adding even more PCs after
+* [33m7248500[m calculating PCs
+* [33m6ab076b[m avergna
+* [33me02e226[m creating pcs for 1000G
+* [33m601942c[m 1000g chrom separation
+* [33mf1bb651[m adding 1000G
+* [33m094f2ce[m reading 1000G
+* [33me742428[m dropping 1000G in gitignore
+* [33m5492bc1[m removing plink compressed folders
+* [33mc26d61b[m adding plink
+* [33m4e15cbe[m adding gitignore
+* [33m02f7d14[m for the fisd
+* [33m01bc281[m flair
+* [33m80bdd4a[m reorganisation
+* [33m0a52bf9[m separate genotypes
+* [33m4037308[m mixing genotype breeds
+* [33m12ea772[m done with creating synthetic genotypes
+* [33m27920d1[m cleaning up
+* [33ma78f811[m refactoring
+* [33mbd5611c[m add gigitignore
+* [33m7f707ea[m streamlining
+* [33m32be699[m push to shove
+[31m|[m * [33maa87b05[m[33m ([m[1;31morigin/backup/2025-08-25-pre-reset[m[33m, [m[1;32mbackup/2025-08-25-pre-reset[m[33m)[m converting to python
+[31m|[m * [33mccb9b8d[m something went wrong
+[31m|[m * [33m70d48ab[m tidying things up
+[31m|[m[31m/[m  
+* [33m7074640[m adapting
+* [33m64d6835[m new methodology
+* [33m0a15510[m adding additional PCs
+* [33m09e52d3[m new approach
+* [33m3327b6d[m reconstruct from PCs
+* [33mb793619[m reevaluate
+* [33mff0b559[m finding best ammount of PCs
+* [33m3167407[m non linear test
+* [33m14f9aa2[m trying something new
+* [33mf914e6f[m creating new analyses
+* [33m6a244be[m creating pca correction
+* [33m58c33d0[m installing current
+* [33m0bdc74f[m installing current
+* [33m4e1535a[m transfering to poetry
+* [33m9d4a212[m transitioning to poetry
+* [33mde8cfc3[m adding proof of concept
+* [33m2d0d4be[m downloading r
+* [33mb67c55a[m cleaning up
+* [33mf4dbe99[m adding inbreeding
+* [33md963872[m cleaning up redudancies
+* [33md748662[m reordering depending on the mafs
+* [33mccfbbe8[m diving back
+* [33m1f2d45e[m creating an update
+* [33m7795031[m making synthetic genotype
+* [33m0afb578[m adding functions
+* [33m8457148[m adding functions
+* [33m8304aed[m changing directories
+* [33m0429fa1[m update
+* [33m0c523f9[m deleting obsolete repositories
+* [33m784d486[m continuing concept
+* [33mf9a055b[m clustering snps based on similarity
+* [33m8cab0a5[m adding LD scores
+* [33m9314d47[m working on chasm
+* [33m5836aa3[m diving back in
+* [33m775347b[m testing out new stuff
+* [33mee9a12a[m counting LD
+* [33m58ad751[m testing stuff out
+* [33m31a91b8[m improving LD selection
+* [33m4207a31[m added mafs
+* [33m1f72e8c[m stopping prototyping
+* [33mecd9af7[m prototyping chasm
+* [33m9052aa6[m creating tiny feed forward models
+* [33m197ea3c[m using new clustering tools
+* [33m4c3c593[m yelp
+* [33m6326e24[m prototyping chasm
+* [33m6f14f7a[m extract snps
+* [33m200ed42[m working oin chasm prototype
+* [33mdfdef46[m adding paths
+* [33m3cd677d[m adding to gitignore
+* [33mf33cd00[m super
+* [33m59ed7e7[m chasm for the win
+* [33medff8bf[m removing test
+* [33m1477872[m added to github
+* [33m8c4109d[m first commit
+* [33m4c6f845[m Initial commit
