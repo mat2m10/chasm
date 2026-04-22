@@ -74,3 +74,76 @@ def show_biases(pheno):
 
     plt.tight_layout()
     plt.show()
+
+def visualize_grid_and_pcs(pcs, humans, dpi=200, s=20):
+    k = int(np.sqrt(humans["populations"].nunique()))
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6), dpi=dpi)
+    ax_grid, ax_pcs = axes
+
+    for i in range(k):
+        for j in range(k):
+            cell = humans[(humans["x"] == i + 1) & (humans["y"] == j + 1)]
+            cell_val = cell["z_outbred"].mean()
+            cell_color = map_to_color(i + 1, j + 1, cell_val, humans, "z_outbred")
+            ax_grid.add_patch(plt.Rectangle((i, j), 1, 1, facecolor=cell_color, edgecolor="black"))
+
+    ax_grid.set_xlim(0, k)
+    ax_grid.set_ylim(0, k)
+    ax_grid.set_aspect("equal")
+    ax_grid.set_xticks(range(k + 1))
+    ax_grid.set_yticks(range(k + 1))
+    ax_grid.grid(True)
+    ax_grid.set_title("Population grid")
+
+    PC_complete = pd.DataFrame(
+        pcs,
+        columns=[f"PC{i+1}" for i in range(pcs.shape[1])],
+        index=humans.index,
+    )
+
+    colors_outbred = [
+        map_to_color(x, y, z, humans, "z_outbred")
+        for x, y, z in zip(humans["x"], humans["y"], humans["z_outbred"])
+    ]
+
+    ax_pcs.scatter(PC_complete["PC1"], PC_complete["PC2"], c=colors_outbred, s=s, linewidths=0)
+    ax_pcs.set_aspect("equal", adjustable="box")
+    ax_pcs.set_xlabel("PC1")
+    ax_pcs.set_ylabel("PC2")
+    ax_pcs.set_title("PCs")
+
+    plt.tight_layout()
+    plt.show()
+    plt.close(fig)
+
+def show_top_snps_ordered(humans, geno, values, k=None):
+    values_ord = values.sort_values("neg_log_p", ascending=True).reset_index(drop=True)
+
+    if k is None:
+        k = int(max(humans["x"].max(), humans["y"].max()))
+
+    base = humans[["x", "y"]]
+    fig, axes = plt.subplots(1, len(values_ord), figsize=(6 * len(values_ord), 6))
+    axes = np.atleast_1d(axes)
+
+    seen = {}
+
+    for ax, row in zip(axes, values_ord.itertuples(index=False)):
+        snp = row.names
+        reason = row.reasons
+        metric = row.metric
+        negp = row.neg_log_p
+
+        seen[snp] = seen.get(snp, 0) + 1
+        title = f"{snp} ({seen[snp]})\n{reason}\n{metric}, neg_log_p={negp:.2g}"
+
+        df = base.copy()
+        df["v"] = geno[snp].values
+        grid = df.groupby(["x", "y"], as_index=False)["v"].mean()
+
+        _plot_grid_heatmap(ax=ax, grid=grid, value_col="v", k=k, title=title, cmap=mpl.cm.viridis)
+        ax.set_title(title, fontsize=9)
+
+    plt.tight_layout()
+    plt.show()
