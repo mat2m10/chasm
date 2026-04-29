@@ -1,5 +1,5 @@
 # Define parameters
-G <- 200
+G <- 1000
 L <- 40
 c <- 20
 k <- 10
