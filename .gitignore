@@ -169,3 +169,8 @@ notebooks/ms_prime_tryout/simulation_realistic/
 *.parquet
 *.npz
 *.pkl
+
+# Vendored binaries and compiled objects (install/build locally, see README)
+/plink
+/plink2
+rstudio_geno_simulation/*.o
