@@ -164,3 +164,8 @@ cython_debug/
 rstudio_geno_simulation/simulated_genotypes*
 data/
  notebooks/ms_prime_tryout/simulation_realistic/*
+
+# Vendored binaries and compiled objects (install/build locally, see README)
+/plink
+/plink2
+rstudio_geno_simulation/*.o
