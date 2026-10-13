@@ -34,3 +34,16 @@ cd chasm
 poetry install
 poetry shell
 ```
+
+### Configuring data paths
+
+Data locations can be set with environment variables (or a `.env` file in
+the repo root, read via `python-dotenv`). Unset variables fall back to the
+previous defaults.
+
+| Variable | Used by | Default |
+|---|---|---|
+| `CHASM_DATA_DIR` | `chasm.glob.glob.PATH_data` | `/mnt/d/chasm_data/` |
+| `CHASM_SIM_DATA_DIR` | `helper/io.py` `load_data()` | `simulation_data` (relative to the notebook folder) |
+| `CHASM_1000G_DIR` | `1000_genomes_notebooks/02 calculate PCs.ipynb` | `../../data/1000G` |
+| `CHASM_PLINK2` | `1000_genomes_notebooks/02 calculate PCs.ipynb` | `../../plink2` |
