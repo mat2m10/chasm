@@ -18,7 +18,7 @@
 
 ```bash
 chasm/
-├── chasm/                         # Core Python package
+├── chasm/                         # Core Python package (geno, gwas, pca, pheno, plotting, io, ...)
 ├── scripts/                       # Utility scripts for genotype parsing, LD scoring, etc.
 ├── notebooks/                     # Jupyter notebooks for simulation pipelines
 ├── rstudio_geno_simulation/      # R and C code for allele sharing and burden testing
@@ -34,3 +34,7 @@ cd chasm
 poetry install
 poetry shell
 ```
+
+The notebooks import the analysis helpers from the `chasm` package
+(`from chasm.gwas import run_gwas`, ...), so run them from the Poetry
+environment where `poetry install` has installed `chasm` in editable mode.
