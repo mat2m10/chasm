@@ -34,3 +34,14 @@ cd chasm
 poetry install
 poetry shell
 ```
+
+## 🧪 Tests
+
+```bash
+poetry run pip install pytest   # once
+poetry run pytest -q
+```
+
+Tests live in `tests/` (MAF computation, genotype simulation shape/HWE,
+PC-based stratification correction) and run on every push via
+`.github/workflows/tests.yml`.
