@@ -1,0 +1,6 @@
+# Strip Jupyter notebook outputs on commit.
+# Activate once per clone (writes the filter into .git/config):
+#   pip install nbstripout && nbstripout --install
+# Without that step these lines are a harmless no-op.
+*.ipynb filter=nbstripout
+*.ipynb diff=ipynb

@@ -34,3 +34,13 @@ cd chasm
 poetry install
 poetry shell
 ```
+
+### Notebook outputs
+
+Notebook outputs are stripped before commit (see `.gitattributes`).
+After cloning, enable the filter once:
+
+```bash
+pip install nbstripout   # or: poetry run pip install nbstripout
+nbstripout --install
+```
