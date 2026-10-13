@@ -22,8 +22,8 @@ chasm/
 ├── scripts/                       # Utility scripts for genotype parsing, LD scoring, etc.
 ├── notebooks/                     # Jupyter notebooks for simulation pipelines
 ├── rstudio_geno_simulation/      # R and C code for allele sharing and burden testing
-├── requirements.txt              # Legacy dependencies (use Poetry now)
-├── pyproject.toml                # Project configuration and dependencies
+├── pyproject.toml                # Project configuration and dependencies (single source of truth)
+├── poetry.lock                   # Locked dependency versions
 ├── README.md
 ```
 
