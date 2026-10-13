@@ -24,9 +24,6 @@ seaborn = "*"
 tensorflow = "*"
 scikit-learn = "*"
 statsmodels = "*"
-umap-learn = "*"
-hdbscan = "*"
-k-means-constrained = "*"
 
 # Utilities
 termcolor = "*"
