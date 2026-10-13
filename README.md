@@ -29,7 +29,7 @@ chasm/
 
 ## 🚀 Getting Started
 ```bash
-git clone https://github.com/yourusername/chasm.git
+git clone https://github.com/mat2m10/chasm.git
 cd chasm
 poetry install
 poetry shell

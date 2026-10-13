@@ -16,9 +16,10 @@ with open('requirements.txt') as f:
 Setup of the project
 """
 setup(name = 'chasm',
-      description= "a deep learning tool that computes a polygenic risk score and trys to find interaction between snps",
+      description= "Simulation toolkit for genotype-phenotype data under population structure, for testing GWAS stratification correction (PCs vs. allele frequencies)",
       install_requires = requirements,
       packages=find_packages(),
+      url="https://github.com/mat2m10/chasm",
       author= "Matthieu de Hemptinne",
       author_email= "m.c.de.hemptinne@vu.nl",
       )
