@@ -22,14 +22,14 @@ chasm/
 ├── scripts/                       # Utility scripts for genotype parsing, LD scoring, etc.
 ├── notebooks/                     # Jupyter notebooks for simulation pipelines
 ├── rstudio_geno_simulation/      # R and C code for allele sharing and burden testing
-├── requirements.txt              # Legacy dependencies (use Poetry now)
-├── pyproject.toml                # Project configuration and dependencies
+├── pyproject.toml                # Project configuration and dependencies (single source of truth)
+├── poetry.lock                   # Locked dependency versions
 ├── README.md
 ```
 
 ## 🚀 Getting Started
 ```bash
-git clone https://github.com/yourusername/chasm.git
+git clone https://github.com/mat2m10/chasm.git
 cd chasm
 poetry install
 poetry shell
@@ -38,3 +38,21 @@ poetry shell
 The notebooks import the analysis helpers from the `chasm` package
 (`from chasm.gwas import run_gwas`, ...), so run them from the Poetry
 environment where `poetry install` has installed `chasm` in editable mode.
+
+### External tools (not tracked in git)
+
+The PLINK binaries and the compiled kpop C code are no longer committed.
+Install or build them locally:
+
+- **PLINK 1.9 / PLINK 2**: download the Linux 64-bit builds from
+  <https://www.cog-genomics.org/plink/> and <https://www.cog-genomics.org/plink/2.0/>,
+  then place the `plink` and `plink2` executables in the repository root
+  (the 1000 Genomes notebooks look for them there) or anywhere on your `PATH`:
+  ```bash
+  chmod +x plink plink2
+  ```
+- **kpop C extension** (used by the R scripts in `rstudio_geno_simulation/`):
+  ```bash
+  cd rstudio_geno_simulation
+  R CMD SHLIB kpop.c   # produces kpop.o and kpop.so
+  ```
