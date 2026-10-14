@@ -39,6 +39,21 @@ The notebooks import the analysis helpers from the `chasm` package
 (`from chasm.gwas import run_gwas`, ...), so run them from the Poetry
 environment where `poetry install` has installed `chasm` in editable mode.
 
+### Configuring data paths
+
+Data locations can be set with environment variables or in a `.env` file in
+the repo root (gitignored). The `.env` is read with `python-dotenv` when the
+`chasm` package is imported, and by `02 calculate PCs.ipynb` itself; variables
+already set in the environment take precedence. Unset variables fall back to
+the previous defaults.
+
+| Variable | Used by | Default |
+|---|---|---|
+| `CHASM_DATA_DIR` | `chasm.glob.glob.PATH_data` (not used by the current notebooks) | `/mnt/d/chasm_data/` |
+| `CHASM_SIM_DATA_DIR` | `chasm/io.py` `load_data()` | `simulation_data` (relative to the notebook folder) |
+| `CHASM_1000G_DIR` | `1000_genomes_notebooks/02 calculate PCs.ipynb` | `../../data/1000G` |
+| `CHASM_PLINK2` | `1000_genomes_notebooks/02 calculate PCs.ipynb` | `../../plink2` |
+
 ### External tools (not tracked in git)
 
 The PLINK binaries and the compiled kpop C code are no longer committed.

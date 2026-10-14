@@ -35,6 +35,9 @@ msprime = ">=1.3"
 # Not imported yet; kept on purpose for reading PLINK .bed files (chasm-6).
 bed-reader = ">=1.0"
 
+# Utilities
+python-dotenv = ">=1.1"   # chasm/glob.py reads a local .env (CHASM_DATA_DIR)
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
