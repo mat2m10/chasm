@@ -8,7 +8,7 @@
 
 - 🧬 Simulation of admixed genotype data with customizable allele frequencies  
 - 🌿 Modeling environmental covariates and gene-environment interactions  
-- 🧪 Correction pipelines using ancestry factors and dimensionality reduction (UMAP, PCA, HDBSCAN)  
+- 🧪 Correction pipelines using ancestry factors and dimensionality reduction (PCA)  
 - 📊 Visualization of allele sharing, association statistics, and burden test results  
 - 🔁 Integration with R-based coalescent models and rare variant association simulations  
 
