@@ -18,7 +18,7 @@
 
 ```bash
 chasm/
-├── chasm/                         # Core Python package
+├── chasm/                         # Core Python package (geno, gwas, pca, pheno, plotting, io, ...)
 ├── scripts/                       # Utility scripts for genotype parsing, LD scoring, etc.
 ├── notebooks/                     # Jupyter notebooks for simulation pipelines
 ├── rstudio_geno_simulation/      # R and C code for allele sharing and burden testing
@@ -35,6 +35,10 @@ poetry install
 poetry shell
 ```
 
+The notebooks import the analysis helpers from the `chasm` package
+(`from chasm.gwas import run_gwas`, ...), so run them from the Poetry
+environment where `poetry install` has installed `chasm` in editable mode.
+
 ### Configuring data paths
 
 Data locations can be set with environment variables (or a `.env` file in
@@ -44,7 +48,7 @@ previous defaults.
 | Variable | Used by | Default |
 |---|---|---|
 | `CHASM_DATA_DIR` | `chasm.glob.glob.PATH_data` | `/mnt/d/chasm_data/` |
-| `CHASM_SIM_DATA_DIR` | `helper/io.py` `load_data()` | `simulation_data` (relative to the notebook folder) |
+| `CHASM_SIM_DATA_DIR` | `chasm/io.py` `load_data()` | `simulation_data` (relative to the notebook folder) |
 | `CHASM_1000G_DIR` | `1000_genomes_notebooks/02 calculate PCs.ipynb` | `../../data/1000G` |
 | `CHASM_PLINK2` | `1000_genomes_notebooks/02 calculate PCs.ipynb` | `../../plink2` |
 
