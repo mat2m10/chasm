@@ -1,10 +1,17 @@
 from pathlib import Path
 import pandas as pd
 
-from scripts.parse_vars import load_config
-
 
 def load_data():
+    """Load the simulated genotypes and humans table for the current config.
+
+    Paths are relative to the working directory, i.e. this expects to be
+    called from notebooks/coalescence_simulation_notebooks/ (as before the
+    move from helper/io.py).
+    """
+    # Imported lazily: `scripts` is only importable with the repo root on sys.path.
+    from scripts.parse_vars import load_config
+
     PATH_VARS = Path("../../geno_simulation.txt")
 
     cfg = load_config(PATH_VARS)
@@ -20,5 +27,5 @@ def load_data():
     humans = pd.read_pickle(f"{path_pheno}/humans.pkl")
 
     path_geno = f"simulation_data/G{G}_L{L}_c{c}_k{k}_M{M}_F{F_outbred}/genotype/"
-    geno = (pd.read_pickle(f"{path_geno}/complete.pkl") + 1) / 2  # stays between 0 and 1
+    geno = pd.read_pickle(f"{path_geno}/complete.pkl")
     return geno, humans
