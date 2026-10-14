@@ -103,7 +103,7 @@ def simulate_genotypes(snps: pd.DataFrame, F: float = 0.0) -> tuple[pd.DataFrame
 
     for pop, pop_df in snps.groupby('populations', sort=False):
         df = pop_df.copy()
-        arr = df[snp_cols].to_numpy()                    # shape: (n_individuals, n_snps)
+        arr = df[snp_cols].to_numpy(copy=True)           # writable copy (pandas>=3 returns read-only views)
         n_ind, n_snps = arr.shape
 
         # --- Flip one random genotype per SNP (0<->1), vectorized

@@ -81,3 +81,14 @@ After cloning, enable the filter once:
 pip install nbstripout   # or: poetry run pip install nbstripout
 nbstripout --install
 ```
+
+## 🧪 Tests
+
+```bash
+poetry install        # includes the dev group (pytest)
+poetry run pytest -q
+```
+
+Tests live in `tests/` (MAF computation, genotype simulation shape/HWE,
+PC-based stratification correction) and run on every push via
+`.github/workflows/tests.yml`.
