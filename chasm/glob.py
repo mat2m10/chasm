@@ -1,11 +1,6 @@
 import os
 
-try:  # python-dotenv is a project dependency; tolerate it being absent
-    from dotenv import load_dotenv
-    load_dotenv()  # picks up CHASM_DATA_DIR from a local .env, if present
-except ImportError:  # pragma: no cover
-    pass
-
+# A .env in the repo root is loaded by chasm/__init__.py before this module runs.
 # Data root. Override with the CHASM_DATA_DIR environment variable (or .env).
 # Default keeps the previous location (external D: drive mounted in WSL:
 #   sudo mount -t drvfs D: /mnt/d).
