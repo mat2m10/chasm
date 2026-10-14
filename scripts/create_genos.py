@@ -2,23 +2,41 @@ from typing import Dict, Tuple
 import pandas as pd
 import numpy as np
 import subprocess
+from pathlib import Path
+
+# Defaults matching rstudio_geno_simulation/create_geno.R output naming.
+R_DIRECTORY = Path(__file__).resolve().parent.parent / "rstudio_geno_simulation"
+R_FILE_STEM = "simulated_genotypes_G{G}_L{L}_c{c}_k{k}_M{M}.csv"
+
+
 def format_M(M):
     return str(int(M)) if M.is_integer() else str(M)
 
-def read_simulated_genotypes(cfg: Dict[str, int]) -> pd.DataFrame:
-    """Read the simulated genotype CSV produced by the R script, then delete it.
-    Returns a DataFrame with genotype columns only; population labels are added later.
+def read_simulated_genotypes(
+    cfg: Dict[str, float],
+    r_directory: Path = R_DIRECTORY,
+    csv_stem: str = R_FILE_STEM,
+    delete_after_read: bool = False,
+) -> pd.DataFrame:
+    """Read the simulated genotype CSV produced by the R script.
+
+    Thin wrapper around `read_generated_csv` that takes the parsed config
+    (G, L, c, k, M) as a dict. Returns a DataFrame with genotype columns only;
+    population labels are added later.
+
+    If `delete_after_read` is True the CSV is removed after loading; errors
+    while deleting are raised rather than silently ignored.
     """
-    csv_name = R_FILE_STEM.format(**cfg)
-    csv_path = R_DIRECTORY / csv_name
-    if not csv_path.exists():
-        raise FileNotFoundError(f"Expected file not found: {csv_path}")
-    df = pd.read_csv(csv_path)
-    # Clean up the file after load (optional)
-    try:
-        csv_path.unlink(missing_ok=True)
-    except Exception:
-        pass
+    df = read_generated_csv(
+        int(cfg["G"]), int(cfg["L"]), int(cfg["c"]), int(cfg["k"]), float(cfg["M"]),
+        Path(r_directory), csv_stem,
+    )
+    if delete_after_read:
+        csv_path = Path(r_directory) / csv_stem.format(
+            G=int(cfg["G"]), L=int(cfg["L"]), c=int(cfg["c"]), k=int(cfg["k"]),
+            M=format_M(float(cfg["M"])),
+        )
+        csv_path.unlink()
     return df
 
 def compute_maf(snps: pd.DataFrame) -> pd.Series:

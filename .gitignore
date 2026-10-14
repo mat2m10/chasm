@@ -163,4 +163,14 @@ cython_debug/
 .venv/
 rstudio_geno_simulation/simulated_genotypes*
 data/
- notebooks/ms_prime_tryout/simulation_realistic/*
+notebooks/ms_prime_tryout/simulation_realistic/
+
+# Simulation outputs / data artefacts (regenerate locally, do not commit)
+*.parquet
+*.npz
+*.pkl
+
+# Vendored binaries and compiled objects (install/build locally, see README)
+/plink
+/plink2
+rstudio_geno_simulation/*.o
