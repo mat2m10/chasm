@@ -85,7 +85,7 @@ nbstripout --install
 ## 🧪 Tests
 
 ```bash
-poetry run pip install pytest   # once
+poetry install        # includes the dev group (pytest)
 poetry run pytest -q
 ```
 

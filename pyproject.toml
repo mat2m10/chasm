@@ -38,6 +38,9 @@ bed-reader = ">=1.0"
 # Utilities
 python-dotenv = ">=1.1"   # chasm/glob.py reads a local .env (CHASM_DATA_DIR)
 
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
