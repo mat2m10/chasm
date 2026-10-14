@@ -72,6 +72,16 @@ Install or build them locally:
   R CMD SHLIB kpop.c   # produces kpop.o and kpop.so
   ```
 
+### Notebook outputs
+
+Notebook outputs are stripped before commit (see `.gitattributes`).
+After cloning, enable the filter once:
+
+```bash
+pip install nbstripout   # or: poetry run pip install nbstripout
+nbstripout --install
+```
+
 ## 🧪 Tests
 
 ```bash
