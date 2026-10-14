@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 
+from chasm.gwas import run_gwas
+from chasm.pca import get_n_pcs
 from scripts.lower_dim import compute_pcs
 
 
@@ -39,3 +41,20 @@ def test_pc_adjustment_removes_stratification():
     X = sm.add_constant(np.column_stack([x, pcs[["PC1"]].to_numpy()]))
     adjusted = sm.OLS(y, X).fit()
     assert adjusted.pvalues[1] > 1e-3
+
+
+def test_run_gwas_with_pcs_removes_stratification():
+    """Same check through the repo's own correction path (as in Proof_of_Concept):
+    PCs from chasm.pca.get_n_pcs passed as covariates to chasm.gwas.run_gwas."""
+    geno, y, snp_idx = _structured_data()
+    snp = geno.iloc[:, [snp_idx]]
+
+    naive = run_gwas(snp, y)
+    assert naive.pval[0] < 1e-8  # spurious hit driven by ancestry
+
+    pcs = get_n_pcs(geno, 4)
+    adjusted = run_gwas(snp, y, pcs[["PC1"]])
+    assert adjusted.pval[0] > 1e-3
+    # PC1 carries the ancestry signal, so its own p-value must be tiny; this also
+    # catches a mix-up between the SNP and covariate columns of the design matrix.
+    assert adjusted.pval_PC1[0] < 1e-8

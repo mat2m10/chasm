@@ -2,6 +2,7 @@ name: tests
 
 on:
   push:
+    branches: [master]
   pull_request:
 
 permissions:
@@ -26,6 +27,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           # Ranges follow pyproject/poetry.lock (numpy<2, pandas 2.x).
-          pip install "numpy<2" "pandas<3" scipy scikit-learn statsmodels pytest
+          # python-dotenv: importing the chasm package loads .env.
+          pip install "numpy<2" "pandas<3" scipy scikit-learn statsmodels python-dotenv pytest
       - name: Run tests
         run: pytest -q
