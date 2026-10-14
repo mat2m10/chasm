@@ -1,8 +1,11 @@
 [tool.poetry]
 name = "chasm"
 version = "0.1.0"
-description = "Simulation and analysis of genotype-phenotype models with dimensionality reduction and clustering"
-authors = ["Your Name <your@email.com>"]
+description = "Simulation toolkit for genotype-phenotype data under population structure, for testing GWAS stratification correction (PCs vs. allele frequencies)"
+authors = ["Matthieu de Hemptinne"]
+readme = "README.md"
+homepage = "https://github.com/mat2m10/chasm"
+repository = "https://github.com/mat2m10/chasm"
 packages = [{ include = "chasm" }]
 
 [tool.poetry.dependencies]
