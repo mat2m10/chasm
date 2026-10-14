@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 import pandas as pd
 
@@ -23,9 +24,13 @@ def load_data():
 
     F_outbred = 0.0
 
-    path_pheno = f"simulation_data/G{G}_L{L}_c{c}_k{k}_M{M}_F{F_outbred}/phenotype/"
+    # Override with CHASM_SIM_DATA_DIR; default is relative to the notebook folder.
+    sim_root = os.environ.get("CHASM_SIM_DATA_DIR", "simulation_data")
+    run_dir = f"{sim_root}/G{G}_L{L}_c{c}_k{k}_M{M}_F{F_outbred}"
+
+    path_pheno = f"{run_dir}/phenotype/"
     humans = pd.read_pickle(f"{path_pheno}/humans.pkl")
 
-    path_geno = f"simulation_data/G{G}_L{L}_c{c}_k{k}_M{M}_F{F_outbred}/genotype/"
+    path_geno = f"{run_dir}/genotype/"
     geno = pd.read_pickle(f"{path_geno}/complete.pkl")
     return geno, humans

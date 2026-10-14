@@ -1,11 +1,23 @@
+import os
+
+# A .env in the repo root is loaded by chasm/__init__.py before this module runs.
+# Data root. Override with the CHASM_DATA_DIR environment variable (or .env).
+# Default keeps the previous location (external D: drive mounted in WSL:
+#   sudo mount -t drvfs D: /mnt/d).
+_DEFAULT_DATA_DIR = "/mnt/d/chasm_data/"
+
+
+def _data_dir() -> str:
+    path = os.environ.get("CHASM_DATA_DIR", _DEFAULT_DATA_DIR)
+    return path if path.endswith("/") else path + "/"
+
+
 class glob():
     DIMS_plot = 2
     DIMS = 1
     EPOCH = 150
     CHROM = 22
-    #PATH_data = f"../UKB_toydata/"
-    #Mount external drive: sudo mount -t drvfs D: /mnt/d
-    PATH_data = f"/mnt/d/chasm_data/"
+    PATH_data = _data_dir()
     PATH_GENO = f"{PATH_data}genotype"
     PATH_usefull = f"{PATH_data}usefull_values"
     PATH_PHENO = f"{PATH_data}phenotype"
